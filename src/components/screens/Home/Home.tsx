@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import {Box, Flex, Heading, IconButton, Text, useBoolean, useDisclosure} from "@chakra-ui/react";
 import Balance from "./Balance";
 import {ArrowRightIcon} from "@chakra-ui/icons";
-import TransferModal from "./TransferModal";
+import TransferModal from "./transferMoney/TransferModal";
 
 
 export const user = {
