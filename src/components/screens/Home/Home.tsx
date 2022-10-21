@@ -16,7 +16,7 @@ const Home: FC = () => {
 
 
     return (
-        <Box bg='black' p='6'>
+        <Box bg='black' h={'100vh'}>
             <Box>
                 <Text fontSize='xl' color='whiteAlpha.500'>Good morning!</Text>
                 <Heading fontSize='2xl'>{user.name}</Heading>

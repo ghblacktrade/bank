@@ -28,17 +28,22 @@ const TransferModal: FC<ITransferModal> = ({isOpen, onClose}) => {
         control,
 
         formState: {errors, isSubmitting},
-    } = useForm<ITransferData>({mode: 'onChange', defaultValues: {
-        amount: 0,
-            card: ''
-        }})
+    } = useForm<ITransferData>({
+        mode: 'onChange', defaultValues: {
+            amount: 0,
+        }
+    })
 
     const onSubmit: SubmitHandler<ITransferData> = data => {
     }
 
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} size='full'>
+        <Modal isOpen={isOpen}
+               onClose={onClose}
+               size='full'
+        motionPreset='slideInBottom'
+        >
             <ModalOverlay/>
             <ModalContent bg='#171717'>
                 <ModalHeader>Transfer your money</ModalHeader>
@@ -52,7 +57,7 @@ const TransferModal: FC<ITransferModal> = ({isOpen, onClose}) => {
                                 control={control}
                                 name='card'
                                 render={({field: {onChange, name, value}}) => (
-                                    <FormControl isInvalid={!!errors.card?.message}>
+                                    <FormControl>
                                         <Input
                                             id={name}
                                             size='md'
@@ -83,7 +88,7 @@ const TransferModal: FC<ITransferModal> = ({isOpen, onClose}) => {
                                     required: 'This is required',
                                 })} />
                             </InputGroup>
-                            <Button variant='outline' mr='3'>Send money</Button>
+                            <Button variant='outline' colorScheme='green'>Send money</Button>
                         </Stack>
 
                     </form>
@@ -91,7 +96,7 @@ const TransferModal: FC<ITransferModal> = ({isOpen, onClose}) => {
 
                 <ModalFooter>
 
-                    <Button colorScheme='green' onClick={onClose}>
+                    <Button variant='outline' onClick={onClose}>
                         Close
                     </Button>
                 </ModalFooter>
