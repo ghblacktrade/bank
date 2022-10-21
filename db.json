@@ -5,19 +5,19 @@
     "id": 1,
     "name": "John Smith",
     "balance": 8640,
-    "cardNumber": 2456764429905394
+    "card": 2456764429905394
   },
   {
     "id": 2,
     "name": "Luca Changretta",
     "balance": 1240,
-    "cardNumber": 2344437584538636
+    "card": 2344437584538636
   },
   {
     "id": 3,
     "name": "Tomas Shelby",
     "balance": 4700,
-    "cardNumber": 5267394595849930
+    "card": 5267394595849930
   }
 ]
 }
