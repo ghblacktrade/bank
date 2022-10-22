@@ -9,11 +9,13 @@ import {
     ModalHeader,
     ModalOverlay, Stack
 } from "@chakra-ui/react";
-import {user} from "../Home";
 import {formatCardNumber} from "../../../../utls/formatCardNumber";
 import {SubmitHandler, useForm, Controller} from "react-hook-form";
 import {ITransferData} from "./transferInterface";
 import {CheckIcon} from "@chakra-ui/icons";
+import {useProfile} from "../../../../hooks/useProfile";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {ITransferMoney, UserService} from "../../../../services/userService";
 
 
 interface ITransferModal {
@@ -22,10 +24,12 @@ interface ITransferModal {
 }
 
 const TransferModal: FC<ITransferModal> = ({isOpen, onClose}) => {
+    const {user} = useProfile()
     const {
         handleSubmit,
         register,
         control,
+        reset,
 
         formState: {errors, isSubmitting},
     } = useForm<ITransferData>({
@@ -34,7 +38,26 @@ const TransferModal: FC<ITransferModal> = ({isOpen, onClose}) => {
         }
     })
 
+    const queryClient = useQueryClient()
+
+    const {mutate, isLoading} = useMutation(
+        ['transfer money '],
+        (data: ITransferMoney) =>
+            UserService.transferMoney(data), {
+            async onSuccess() {
+                reset()
+                await queryClient.invalidateQueries(['profile'])
+            }
+        }
+    )
     const onSubmit: SubmitHandler<ITransferData> = data => {
+        if (!user?.card) return
+
+        mutate({
+            card: data.card,
+            amount: Number(data.amount),
+            fromCard: user.card
+        })
     }
 
 
@@ -42,7 +65,7 @@ const TransferModal: FC<ITransferModal> = ({isOpen, onClose}) => {
         <Modal isOpen={isOpen}
                onClose={onClose}
                size='full'
-        motionPreset='slideInBottom'
+               motionPreset='slideInBottom'
         >
             <ModalOverlay/>
             <ModalContent bg='#171717'>
@@ -51,7 +74,7 @@ const TransferModal: FC<ITransferModal> = ({isOpen, onClose}) => {
                 <ModalBody>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Stack>
-                            <Input placeholder='From card' size='md' defaultValue={formatCardNumber(user.cardNumber)}
+                            <Input placeholder='From card' size='md' defaultValue={formatCardNumber(user?.card || 0)}
                                    disabled/>
                             <Controller
                                 control={control}
@@ -88,7 +111,14 @@ const TransferModal: FC<ITransferModal> = ({isOpen, onClose}) => {
                                     required: 'This is required',
                                 })} />
                             </InputGroup>
-                            <Button variant='outline' colorScheme='green'>Send money</Button>
+                            <Button variant='outline'
+                                    colorScheme='green'
+                                    isLoading={isLoading}
+                                    loadingText='Sending money'
+                                    type='submit'
+                            >
+                                Send money
+                            </Button>
                         </Stack>
 
                     </form>

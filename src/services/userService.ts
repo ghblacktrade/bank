@@ -31,12 +31,12 @@ export const UserService = {
         const userFrom = await this.getUserByCard(fromCard)
         const userTo = await this.getUserByCard(card)
 
-        // await instance.patch(`/users/${userFrom.id}`, {
-        //     balance: userFrom.balance - amount
-        // })
-        //
-        // await instance.patch(`/users/${userTo.id}`, {
-        //     balance: userTo.balance + amount
-        // })
+        await instance.patch(`/users/${userFrom.id}`, {
+            balance: userFrom.balance - amount
+        })
+
+        await instance.patch(`/users/${userTo.id}`, {
+            balance: userTo.balance + amount
+        })
     }
 }
