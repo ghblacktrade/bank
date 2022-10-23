@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import {
     Button, FormControl, FormErrorMessage, FormLabel, Input, InputGroup, InputLeftElement, InputRightElement,
     Modal,
@@ -16,6 +16,7 @@ import {CheckIcon} from "@chakra-ui/icons";
 import {useProfile} from "../../../../hooks/useProfile";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {ITransferMoney, UserService} from "../../../../services/userService";
+import SuccessAlert from "./SuccessAlert";
 
 
 interface ITransferModal {
@@ -25,6 +26,9 @@ interface ITransferModal {
 
 const TransferModal: FC<ITransferModal> = ({isOpen, onClose}) => {
     const {user} = useProfile()
+
+    const [isSuccess, setIsSuccess] = useState(false)
+
     const {
         handleSubmit,
         register,
@@ -45,8 +49,12 @@ const TransferModal: FC<ITransferModal> = ({isOpen, onClose}) => {
         (data: ITransferMoney) =>
             UserService.transferMoney(data), {
             async onSuccess() {
+                setIsSuccess(true)
                 reset()
                 await queryClient.invalidateQueries(['profile'])
+                setTimeout(() => {
+                    setIsSuccess(false)
+                }, 2000)
             }
         }
     )
@@ -68,7 +76,8 @@ const TransferModal: FC<ITransferModal> = ({isOpen, onClose}) => {
                motionPreset='slideInBottom'
         >
             <ModalOverlay/>
-            <ModalContent bg='#171717'>
+            <ModalContent bg='#171717' pos='relative'>
+                {isSuccess && <SuccessAlert/>}
                 <ModalHeader>Transfer your money</ModalHeader>
                 <ModalCloseButton/>
                 <ModalBody>
